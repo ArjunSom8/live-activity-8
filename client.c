@@ -33,11 +33,13 @@ int main(int argc, char *argv[])
     Get and convert the port number from the second argument passed to the program
     */
     // TODO
+    portno = atoi(argv[1]);
 
     /*
     Create a new socket of type SOCK_STREAM using the Internet Protocol version 4 (IPv4) address family
     */
     // TODO
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)
         error("ERROR opening socket");
 
@@ -45,6 +47,7 @@ int main(int argc, char *argv[])
     Get the server hostname from the first argument passed to the program using the gethostbyname() function
     */
     // TODO
+    server = gethostbyname(argv[1]);
     if (server == NULL)
     {
         fprintf(stderr, "ERROR, no such host\n");
@@ -57,12 +60,18 @@ int main(int argc, char *argv[])
     AF_INET is an address family that designate the type of addresses that the socket can communicate with (in this case, Internet Protocol v4 addresses).
     */
     bzero((char *)&server_address, sizeof(server_address));
+    server_address.sin_family = AF_INET;
     bcopy((char *)server->h_addr, (char *)&server_address.sin_addr.s_addr, server->h_length);
+    server_address.sin_port = htons(portno);
     // TODO: Add IPV4 address family to the server address struct
     // TODO: Add port number to the server address struct
 
     /*Establish a connect to the server*/
     // TODO
+    if (connect(sockfd, (struct sockaddr *)&server_address, sizeof(server_address)) < 0) 
+    {
+        error("ERROR");
+    }
 
     printf("Please enter the message: ");
     bzero(buffer, 256);

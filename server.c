@@ -35,6 +35,7 @@ int main(int argc, char *argv[])
     Create a new socket of type SOCK_STREAM using the Internet Protocol version 4 (IPv4) address family
     */
     // TODO
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)
         error("ERROR opening socket");
 
@@ -47,7 +48,9 @@ int main(int argc, char *argv[])
     bzero((char *)&server_address, sizeof(server_address));
 
     portno = atoi(argv[1]);
+    server_address.sin_family = AF_INET;
     server_address.sin_addr.s_addr = INADDR_ANY;
+    server_address.sin_port = htons(portno);
     // TODO: Add IPV4 address family to the server address struct
     // TODO: Add port number to the server address struct
 
@@ -58,6 +61,10 @@ int main(int argc, char *argv[])
      This bind() call will bind  the socket to the current IP address on port, portno
     */
     // TODO
+    if (bind(sockfd, (struct sockaddr *) &server_address, sizeof(server_address)) < 0)
+    {
+        error("ERROR");
+    }
 
      /*
      Listen to the incoming connections.
@@ -71,6 +78,10 @@ int main(int argc, char *argv[])
     */
     clilen = sizeof(client_address);
     // TODO
+    if (newsockfd < 0)
+    {
+        error("ERROR");
+    }
     
     if (newsockfd < 0)
         error("ERROR on accept");
